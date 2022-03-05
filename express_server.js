@@ -57,16 +57,24 @@ const generateRandomString = function() {
   return result;
 };
 
+// redirects to longURL when user initiates shortURL
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   console.log({shortURL});
   const longURL = urlDatabase[shortURL];
-
   res.redirect(longURL);
 });
 
 app.post("/urls", (req, res) => {
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
-  res.redirect(`/urls/${shortURL}`);         // Respond with 'Ok' (we will replace this)
+  res.redirect(`/urls/${shortURL}`);        
+});
+
+// deletes short URL from database: ISSUE!!
+app.post("/urls/:shortURL/delete", (req, res) => {
+  const shortURL = req.params.shortURL;
+  delete urlDatabase[shortURL];
+  res.redirect("/urls");
+
 });
