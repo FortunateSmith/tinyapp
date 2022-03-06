@@ -44,7 +44,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
 });
-
+/////////////////////////////////////////////////////////
 // to generate short sequences to be used as short urls
 const generateRandomString = function() {
   const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -56,7 +56,7 @@ const generateRandomString = function() {
   }
   return result;
 };
-
+/////////////////////////////////////////////////
 // redirects to longURL when user initiates shortURL
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
@@ -65,16 +65,21 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
+app.post("/urls/:id", (req, res) => {
+  const shortURL = req.params.id;
+  urlDatabase[shortURL] = req.body.longURL;
+  res.redirect(`/urls`);
+});
+
 app.post("/urls", (req, res) => {
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
-  res.redirect(`/urls/${shortURL}`);        
+  res.redirect(`/urls/${shortURL}`);
 });
 
-// deletes short URL from database: ISSUE!!
+// deletes short URL from database
 app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL;
   delete urlDatabase[shortURL];
   res.redirect("/urls");
-
 });
