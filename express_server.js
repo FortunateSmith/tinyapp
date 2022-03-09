@@ -40,6 +40,13 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+app.get("/register", (req, res) => {
+  const templateVars = {
+    username: req.cookies["username"]
+  }
+  res.render("register", templateVars);
+});
+
 app.get("/urls/new", (req, res) => {
   const templateVars = {
     username: req.cookies["username"]
@@ -76,6 +83,12 @@ app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[shortURL];
   res.redirect(longURL);
 });
+
+// app.post("/register", (req, res) => {
+//   const email = req.body.email;
+//   const password = req.body.password;
+
+// })
 
 app.post("/login", (req, res) => {
   const username = req.body.username
