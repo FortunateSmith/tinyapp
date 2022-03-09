@@ -16,6 +16,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com",
 };
 
+const users = {
+  "userRandomId": {
+    id: "userRandomId",
+    email: "example@fmail.com",
+    password: "unicorn_f4arts"
+  },
+  "user2RandomId": {
+    id: "user2RandomId",
+    email: "example2@zmail.com",
+    password: "12345"
+  }
+}
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -84,15 +97,23 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
-// app.post("/register", (req, res) => {
-//   const email = req.body.email;
-//   const password = req.body.password;
-
-// })
+// Registration
+app.post("/register", (req, res) => {
+  let id = generateRandomString();
+  let user = {
+   email: req.body.email,
+   password: req.body.password,
+   id: id
+ }
+ users[id] = user;
+ res.cookie("user_id", id);
+ console.log(users);
+ res.redirect(`/urls`);
+});
 
 app.post("/login", (req, res) => {
   const username = req.body.username
-  res.cookie("username", username );
+  res.cookie("username", username);
   res.redirect(`/urls`);
 });
 // assigns new longURL to previously created shortURL
