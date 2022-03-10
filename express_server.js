@@ -104,10 +104,23 @@ app.post("/register", (req, res) => {
    email: req.body.email,
    password: req.body.password,
    id: id
- }
- users[id] = user;
+ };
+
+  if (req.body.password.length === 0 || req.body.email.length === 0 ) {
+    return res.status(400).send("ERROR 400: Email and/or Password field empty");
+  }
+  const usersEmail = Object.values(users);
+  const findEmail = usersEmail.find(userEmail => {
+    return userEmail.email === req.body.email;
+  });
+  console.log(findEmail);
+
+  if (findEmail) {
+    return res.status(400).send('User account already exists for this email');
+  };
+  users[id] = user;
  res.cookie("user_id", id);
- console.log(users);
+ //console.log(users);
  res.redirect(`/urls`);
 });
 
