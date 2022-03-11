@@ -47,7 +47,7 @@ const findEmail = function(email, users) {
     }
   }
   return false;
-}
+};
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -70,7 +70,7 @@ app.get("/urls", (req, res) => {
     urls: urlDatabase
   };
   
-  console.log("vars: ", templateVars)
+  console.log("vars: ", templateVars);
   res.render("urls_index", templateVars);
 });
 
@@ -91,8 +91,8 @@ app.get("/login", (req, res) => {
 app.get("/urls/new", (req, res) => {
   const userID = req.cookies["user_id"];
   if (!userID) {
-    return res.redirect("/register")
-  };
+    return res.redirect("/register");
+  }
   const user = users[userID];
   const templateVars = {
     user
@@ -103,8 +103,8 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const userID = req.cookies["user_id"];
   if (!userID) {
-    return res.redirect("/register")
-  };
+    return res.redirect("/register");
+  }
   const user = users[userID];
 
   const templateVars = {
@@ -143,7 +143,7 @@ app.post("/register", (req, res) => {
   if (password.length === 0 || email.length === 0) {
     return res.status(400).send("ERROR 400: Email and/or Password field empty");
   }
-  const findEmailInUsers = findEmail(email, users) 
+  const findEmailInUsers = findEmail(email, users);
   if (findEmailInUsers) {
     return res.status(400).send('ERROR 400: User account already exists for this email');
   }
@@ -164,14 +164,14 @@ app.post("/register", (req, res) => {
 // POST: login
 app.post("/login", (req, res) => {
 
-  const {email, password} = req.body
+  const {email, password} = req.body;
   if (password.length === 0 || email.length === 0) {
     return res.status(403).send("ERROR 403: Email and/or Password field empty");
   }
   
-  const authUser = authenticateUser(email, password, users)
+  const authUser = authenticateUser(email, password, users);
   if (!authUser) {
-    return res.status(403).send("ERROR 403: Email doesn't exist")
+    return res.status(403).send("ERROR 403: Email doesn't exist");
   }
   
   const id = authUser.id;
