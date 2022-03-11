@@ -27,7 +27,7 @@ const users = {
     email: "example2@zmail.com",
     password: "12345"
   }
-}
+};
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -46,33 +46,46 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  const loggedInUserID = req.cookies["user_id"];
+  const loggedInUser = users[loggedInUserID];
+  
   const templateVars = {
-    username: req.cookies["username"],
+    user: loggedInUser,
     urls: urlDatabase
   };
+ 
+  console.log("vars: ", templateVars)
   res.render("urls_index", templateVars);
 });
 
 app.get("/register", (req, res) => {
   const templateVars = {
-    username: req.cookies["username"]
-  }
+    user: req.cookies["user_id"]
+  };
   res.render("register", templateVars);
+});
+
+app.get("/login", (req, res) => {
+  
+  const templateVars = {
+    user: req.cookies["user_id"],
+  };
+  res.render("login", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   const templateVars = {
-    username: req.cookies["username"]
-  }
+    user: req.cookies["user_id"]
+  };
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   console.log("urls databse: ", urlDatabase);
-  const templateVars = { 
-    shortURL: req.params.shortURL, 
+  const templateVars = {
+    shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies["username"]
+    user: req.cookies["user_id"]
   };
   res.render("urls_show", templateVars);
 });
@@ -101,12 +114,12 @@ app.get("/u/:shortURL", (req, res) => {
 app.post("/register", (req, res) => {
   let id = generateRandomString();
   let user = {
-   email: req.body.email,
-   password: req.body.password,
-   id: id
- };
+    email: req.body.email,
+    password: req.body.password,
+    id: id
+  };
 
-  if (req.body.password.length === 0 || req.body.email.length === 0 ) {
+  if (req.body.password.length === 0 || req.body.email.length === 0) {
     return res.status(400).send("ERROR 400: Email and/or Password field empty");
   }
   const usersEmail = Object.values(users);
@@ -117,16 +130,15 @@ app.post("/register", (req, res) => {
 
   if (findEmail) {
     return res.status(400).send('User account already exists for this email');
-  };
+  }
   users[id] = user;
- res.cookie("user_id", id);
- //console.log(users);
- res.redirect(`/urls`);
+  res.cookie("user_id", id);
+  res.redirect(`/urls`);
 });
 
 app.post("/login", (req, res) => {
-  const username = req.body.username
-  res.cookie("username", username);
+  const user = req.body.user;
+  res.cookie("user_id", user);
   res.redirect(`/urls`);
 });
 // assigns new longURL to previously created shortURL
@@ -150,6 +162,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect(`/urls`);
-})
+});
