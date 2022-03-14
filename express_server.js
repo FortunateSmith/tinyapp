@@ -199,7 +199,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 // POST: logout
 app.post("/logout", (req, res) => {
-  req.session.user_id = null;
+  req.session = null;
   res.redirect(`/login`);
 });
 
