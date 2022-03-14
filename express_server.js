@@ -33,9 +33,6 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const loggedInUserID = req.session.user_id;
-  if (!loggedInUserID) {
-    res.redirect("/login");
-  }
   const loggedInUser = users[loggedInUserID];
   const userURLs = urlsForUser(loggedInUserID);
   const templateVars = {
